@@ -1,0 +1,21 @@
+.login-card{
+    margin:0 auto;
+    width:400px;
+    .card-header{
+        margin:0 auto;
+        .mat-card-header-text {
+            margin: 0 auto;
+
+            .mat-card-title {
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .error {
+        font-size: 14px;
+        color: #f44336;
+        text-align: center;
+    }
+}

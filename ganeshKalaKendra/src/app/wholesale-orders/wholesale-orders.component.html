@@ -1,0 +1,77 @@
+<div class="wholesale-orders-wrapper">
+  <mat-card>
+    <mat-card-header class="card-header">
+      <mat-card-title>Wholesale Orders</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <div class="filters">
+          <mat-form-field>
+            <mat-select placeholder="Customer Name" [(value)]="selectedCustName">
+              <mat-option value="">All</mat-option>
+              <mat-option *ngFor="let custName of custNameArr" value={{custName}}>{{custName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="filters">
+          <mat-form-field>
+            <mat-select placeholder="Month" [(value)]="selectedMonth">
+              <mat-option value="">All</mat-option>
+              <mat-option *ngFor="let month of monthArr" value={{month.value}}>{{month.month}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="filters">
+          <mat-form-field>
+            <mat-select placeholder="Year" [(value)]="selectedYear">
+              <mat-option *ngFor="let year of yearArr" value={{year}}>{{year}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="total-container">
+          Total:
+          <span class="total-value">{{(wholesaleBillsArr | yearFilter: selectedYear | monthFilter: selectedMonth| nameFilter: selectedCustName)?.length}}</span>
+        </div>
+
+      </div>
+      <table class="product-table">
+        <tr>
+          <th width="100">
+            Bill No.
+          </th>
+          <th width="600">
+            Name
+          </th>
+          <th width="150">
+            Created Date
+          </th>
+          <th width="150">
+            Delivery Date
+          </th>
+          <th width="200">
+            Receipts
+          </th>
+          <th width="50">
+            Actions
+          </th>
+        </tr>
+        <tr *ngFor="let bill of wholesaleBillsArr| yearFilter: selectedYear | monthFilter: selectedMonth| nameFilter: selectedCustName | slice:startIndex:endIndex; let i = index">
+          <td width="100">{{bill.billNo}}</td>
+          <td width="600">{{bill.name}}</td>
+          <td width="100">{{bill.createdDate}}</td>
+          <td width="100">{{bill.deliveryDate === null ||bill.deliveryDate === '' ?'---': bill.deliveryDate}}</td>
+          <td width="100">
+            <button class="view-print-btn" mat-raised-button color="primary" (click)="printBill(bill.billHtml)">View / Print Bill</button>
+          </td>
+          <td width="50" class="actions">
+            <i class="material-icons icon" title="Delete" (click)="deleteBill(bill._id)">delete</i>
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-paginator [length]="(wholesaleBillsArr | yearFilter: selectedYear | monthFilter: selectedMonth| nameFilter: selectedCustName)?.length"
+      [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="onChange($event)">
+    </mat-paginator>
+  </mat-card>
+</div>

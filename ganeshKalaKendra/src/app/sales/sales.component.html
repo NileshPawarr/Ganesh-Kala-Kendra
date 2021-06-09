@@ -1,0 +1,365 @@
+<mat-card class="sales-card">
+  <mat-card-header class="card-header">
+    <mat-card-title>Sales</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form class="sales-form" [formGroup]="salesForm">
+      <!--Bill no-->
+      <mat-form-field class="bill-data bill-num">
+        <input type="text" name="billNo" placeholder="Bill No." matInput formControlName="billNo">
+      </mat-form-field>
+      <!--End of Bill No-->
+
+      <!--Date-->
+      <div class="date-section float-right">
+        <div class="date-fields">
+          <span>Date:</span>
+          <mat-form-field>
+            <input type="text" id="currentDate" name="currentDate" formControlName="currentDate" matInput>
+          </mat-form-field>
+        </div>
+        <div>
+          <span>Delivery Date:</span>
+          <mat-form-field>
+            <input type="text" id="deliveryDate" name="deliveryDate" formControlName="deliveryDate" matInput>
+          </mat-form-field>
+        </div>
+      </div>
+      <!--End of Date-->
+      <div class="clearfix"></div>
+
+      <div class="customer-type-checkbox">
+        <mat-checkbox (change)="changeBillFormat()" [(ngModel)]="isWholesaleCust" formControlName="isWholesaleCust">Is Wholesale Customer</mat-checkbox>
+      </div>
+
+      <div formGroupName="customerDetails">
+        <!--Customer Name-->
+        <mat-form-field class="cust-prefix">
+          <mat-select placeholder="" formControlName="selectedValue" name="prefix">
+            <mat-option *ngFor="let prefix of prefixArr" [value]="prefix">
+              {{prefix}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="width-76">
+          <input type="text" (input)="customerfilter()" id="custName" name="custName" placeholder="Customer Name" matInput formControlName="name"
+            [matAutocomplete]="auto" required>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions" [value]="option.name" (click)="onCustomerSelect(option)">
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <div *ngIf="salesForm['controls'].customerDetails['controls']['name'].errors && !salesForm['controls'].customerDetails['controls'].name.pristine"
+            class="error-msg">
+            <div [hidden]="!salesForm['controls'].customerDetails['controls'].name.errors.required">Customer Name is required.</div>
+          </div>
+        </mat-form-field>
+        <!--End of Customer Name-->
+
+        <!--Customer Phone number-->
+        <mat-form-field class="width-17 phn-num">
+          <span matPrefix>+91 &nbsp;</span>
+          <input type="tel" maxlength="10" matInput name="custPhone" placeholder="Phone Number" formControlName="phone">
+        </mat-form-field>
+        <!--End of Customer Phone number-->
+
+        <!--Customer Address-->
+        <mat-form-field class="full-width">
+          <input type="text" maxlength="100" matInput name="custAddress" placeholder="Customer Address" formControlName="address">
+        </mat-form-field>
+        <!--End of Customer Address-->
+      </div>
+
+      <!--Product Details-->
+      <table class="product-table" formArrayName="productsArr">
+        <tr *ngFor="let product of salesForm['controls'].productsArr['controls']; let i = index" [formGroupName]="i" class="products products-{{i}}">
+          <td [ngStyle]="{'width': isWholesaleCust ? '700px': '1040px'}">
+            <mat-form-field class="full-width">
+              <input type="text" matInput name="productName-{{i}}" placeholder="Product Name" [matAutocomplete]="auto" formControlName="pName"
+                (focus)="onProductFocus($event,i)" [required]="i===0" class="pName">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let product of filteredProducts | async" [value]="product.name" (click)="onProductSelect(product, i, $event)">
+                  {{ product.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </td>
+          <td width="200" *ngIf="isWholesaleCust">
+            <mat-form-field class="full-width">
+              <input type="number" min="0" matInput name="productQuantity-{{i}}" placeholder="Quantity" formControlName="quantity" (input)="calculatePrice(i)"
+                (blur)="checkFinalAmount()" class="quantity">
+            </mat-form-field>
+          </td>
+          <td width="200" *ngIf="isWholesaleCust">
+            <mat-form-field class="full-width">
+              <span matPrefix>&#8377; &nbsp;</span>
+              <input type="number" min="0" matInput name="productRate-{{i}}" placeholder="Rate" formControlName="rate" (input)="calculatePrice(i)"
+                (blur)="checkFinalAmount()" class="rate">
+            </mat-form-field>
+          </td>
+          <td width="200">
+            <mat-form-field class="full-width">
+              <span matPrefix>&#8377; &nbsp;</span>
+              <input type="number" min="0" matInput name="productPrice-{{i}}" placeholder="Price" formControlName="price" (input)="calculateFinalPrice()"
+                (blur)="checkFinalAmount()" class="price">
+            </mat-form-field>
+          </td>
+          <td>
+            <i class="material-icons icon" [ngClass]="{disabled:i==0}" (click)="removeProduct(i)">
+              cancel
+            </i>
+          </td>
+        </tr>
+      </table>
+
+      <div class="product-action">
+        <a class="add-link" *ngIf="isWholesaleCust" (click)="addProduct()">+ Add Product</a>
+      </div>
+      <!--End of Product Details-->
+
+      <div class="left-panel">
+        <div class="rows height-section" *ngIf="!isWholesaleCust">
+          <span>Height:</span>
+          <span class="units-wrapper">
+            <mat-form-field class="height-units">
+              <mat-select class="unit-dropdown" formControlName="feet" name="feet">
+                <mat-option *ngFor="let feet of feetArr" [value]="feet">
+                  {{feet}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <label class="unit">Feet</label>
+          </span>
+          <span class="units-wrapper">
+            <mat-form-field class="height-units">
+              <mat-select class="unit-dropdown" formControlName="inches" name="inch">
+                <mat-option *ngFor="let inch of inchArr" [value]="inch">
+                  {{inch}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <label class="unit">Inches</label>
+          </span>
+        </div>
+        <div class="additional-feature-section" *ngIf="!isWholesaleCust">
+          <div class="rows cloth-details">
+            धोतर :
+            <mat-form-field class="color-wrapper">
+              <mat-select class="color-dropdown" formControlName="dhotiColor" name="color1">
+                <mat-option *ngFor="let color of colorArr" [value]="color">
+                  {{color}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="feature">
+              <input type="text" maxlength="20" name="feature1" placeholder="" matInput formControlName="feature1">
+            </mat-form-field>
+          </div>
+          <div class="rows cloth-details">
+            शाल :
+            <mat-form-field class="color-wrapper">
+              <mat-select class="color-dropdown" formControlName="shawlColor" name="color2">
+                <mat-option *ngFor="let color of colorArr" [value]="color">
+                  {{color}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="feature">
+              <input type="text" maxlength="20" name="feature2" placeholder="" matInput formControlName="feature2">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="payment-section">
+          <div>Payment Type:</div>
+          <mat-radio-group name="payment" formControlName="paymentType">
+            <mat-radio-button value="Cash">Cash</mat-radio-button>
+            <mat-radio-button value="Cheque">Cheque</mat-radio-button>
+            <mat-radio-button value="Credit">Credit</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="right-panel float-right">
+        <div class="amount-labels">
+          <label>Total:</label>
+          <label>Advance:</label>
+          <label>Amount to be paid:</label>
+        </div>
+
+        <div class="amount-fields">
+          <mat-form-field class="amount">
+            <span matPrefix>&#8377; &nbsp;</span>
+            <input type="number" name="totalAmount" placeholder="" matInput formControlName="totalAmt" (input)="deductAdvance()" (blur)="checkFinalAmount()">
+          </mat-form-field>
+          <mat-form-field class="amount">
+            <span matPrefix>&#8377; &nbsp;</span>
+            <input type="number" name="advanceAmt" placeholder="" matInput formControlName="advanceAmt" (input)="deductAdvance()" (blur)="checkFinalAmount()">
+          </mat-form-field>
+          <mat-form-field class="amount" [ngClass]="{'invalid':invalidTotal}">
+            <span matPrefix>&#8377; &nbsp;</span>
+            <input type="number" name="remAmt" placeholder="" matInput formControlName="remAmt">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </form>
+    <!-- <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner> -->
+  </mat-card-content>
+  <mat-card-actions>
+    <button class="save-btn" mat-raised-button [disabled]="salesForm.invalid" (click)="saveBill(false)" color="primary">Save</button>
+    <button class="print-btn" mat-raised-button [disabled]="salesForm.invalid" (click)="saveBill(true)" color="primary">Print</button>
+  </mat-card-actions>
+</mat-card>
+
+
+
+<!-- Print template -->
+<div id="print-section" style="display: none">
+  <div class="invoice-box">
+    <div>
+      <div class="header-note">।। श्री गणेशाय नमः ।।</div>
+      <span class="contact-info">
+        प्रो. प्रा. गणेश गव्हाणकर
+        <br/> मो. ९३२२१२१२४
+        <br/> &nbsp;&nbsp;&nbsp;&nbsp; ९८३३५५१५३२
+      </span>
+    </div>
+    <table cellpadding="0" cellspacing="0">
+      <tr class="top">
+        <td colspan="2">
+          <table>
+            <tr class="title">
+              <td>
+                <img src="/assets/images/logo.jpg">
+                <!--  <span>Ganesh Kala Kendra</span> -->
+              </td>
+              <td>
+                <h2> गणेश कला केंद्र </h2>
+                <div class="header-subtext">
+                  <i>आमच्या येथे गणेशाच्या व गौरी तसेच दुर्गा मातेच्या सुंदर व सुबक मुर्ती ऑर्डरप्रमाणे तयार करून मिळतील </i>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr class="address-bar">
+        <td>
+          <div>मु.पो. वाडेघर, पंढरीनाथ पाटील चाळ, ता. कल्याण, जि. ठाणे</div>
+        </td>
+      </tr>
+      <tr class="information">
+        <td colspan="2">
+          <table>
+            <tr>
+              <td>
+                Name:
+                <span class="custName"></span>
+                <br>Address:
+                <span class="address"></span>
+                <br>Phone:+91
+                <span class="phone"></span>
+              </td>
+
+              <td>
+                Bill No.:
+                <span class="bill-no"></span>
+                <br> Date:
+                <span class="current-date"></span>
+                <div class="due-date-wrapper">
+                  Delivery Date:
+                  <span class="delivery-date"></span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <table class="product-list-table">
+      <tr class="heading">
+        <td width="50">Sr.</td>
+        <td class="name">Product Name</td>
+        <td width="100">Quantity</td>
+        <td width="100">Rate</td>
+        <td width="100">Price</td>
+      </tr>
+      <tr class="item">
+        <td class="sr-num"></td>
+        <td class="product"></td>
+        <td class="quantity"></td>
+        <td class="rate">
+          <span>₹ &nbsp;</span>
+        </td>
+        <td class="price">
+          <span>₹ &nbsp;</span>
+        </td>
+      </tr>
+    </table>
+    <div class="payment-wrapper" style="color:black; margin-top: 10px;">
+      Payment mode: <span class="payment-mode"></span>
+    </div>
+    <div class="additional-feature" style="display: none; color:black; float:left;">
+      <div class="feature">
+        Height:
+        <span class="feet"></span>&nbsp;Ft. &nbsp;
+        <span class="inches"></span>&nbsp;In.
+      </div>
+      <div class="feature">
+        धोतर :
+        <span class="dhotar"></span> -&nbsp; &nbsp;
+        <span class="feature1"></span>
+      </div>
+      <div class="feature">
+        शाल :
+        <span class="shawl"></span> -&nbsp; &nbsp;
+        <span class="feature2"></span>
+      </div>
+    </div>
+    <div class="costing-table-container">
+      <table align="right">
+        <tr class="total">
+          <td class="right">Total:</td>
+          <td width="100">
+            <span>₹ &nbsp;</span>
+            <span class="total-value"></span>
+          </td>
+        </tr>
+        <tr class="total">
+          <td class="right">Advance:</td>
+          <td width="100">
+            <span>₹ &nbsp;</span>
+            <span class="advance-value"></span>
+          </td>
+        </tr>
+        <tr class="total">
+          <td class="right">Amount to be paid:</td>
+          <td width="100">
+            <span>₹ &nbsp;</span>
+            <span class="to-be-paid-value"></span>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+    <div class="footer-note">
+      <div class="customer-note" style="display: none;">
+        <b> सूचना : </b>
+        <br/> १)कृपया गणपती नेतेवेळी पावती जरूर आणावी.
+        <br/> २)एकदा दिलेली ऍडव्हान्स परत दिली जाणार नाही
+      </div>
+      <div class="wholesale-note" style="display: none;">
+
+        <b> टिप :</b>
+        <br/> १) एकदा विकलेला माल परत घेतला जाणार नाही.
+        <br/> २) दिलेल्या गणपतीची डाय पाडू नये (साचा)
+        <br/> ३) राहिलेली रक्कम गणपतीच्या दुसऱ्या दिवशी देणे.
+        <br/> ४) राहिलेल्या रक्कमेत कोणत्याही कारणास्तव बदल होणार नाही
+        <br/>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="customer-popup">
+  <h1 mat-dialog-title>Customer Information</h1>
+  <div mat-dialog-content class="modal-body">
+    <mat-form-field class="full-width">
+      <input type="text" name="custName" matInput [(ngModel)]="data.name" placeholder="Customer Name" autofocus required>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <textarea matInput maxlength="100" name="custAddress" [(ngModel)]="data.address" maxRows="2" placeholder="Address"></textarea>
+    </mat-form-field>
+    <mat-form-field class="phone-number">
+      <span matPrefix>+91 &nbsp;</span>
+      <input type="tel" maxlength="10" matInput name="custPhone" [(ngModel)]="data.phone" placeholder="Phone Number">
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" [mat-dialog-close]="data">Save</button>
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+  </div>
+</div>

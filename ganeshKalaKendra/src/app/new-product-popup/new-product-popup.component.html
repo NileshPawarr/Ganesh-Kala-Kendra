@@ -1,0 +1,19 @@
+<div class="product-popup">
+  <h1 mat-dialog-title>Product Information</h1>
+  <div mat-dialog-content>
+    <mat-form-field class="full-width">
+      <input type="text" matInput [(ngModel)]="data.name" placeholder="Product Name" autofocus required (input)="checkInputs()">
+    </mat-form-field>
+ <!--    <mat-form-field class="inline-width pad-right-10">
+      <input type="number" min="0" matInput [(ngModel)]="data.quantity" placeholder="Quantity" (input)="checkInputs()">
+    </mat-form-field> -->
+    <mat-form-field class="full-width">
+      <span matPrefix>&#8377; &nbsp;</span>
+      <input type="number" min="0" matInput [(ngModel)]="data.rate" placeholder="Rate" required (input)="checkInputs()">
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" [disabled]="disable" [mat-dialog-close]="data">Save</button>
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+  </div>
+</div>

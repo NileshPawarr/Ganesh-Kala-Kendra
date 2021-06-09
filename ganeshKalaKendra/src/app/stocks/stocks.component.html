@@ -1,0 +1,41 @@
+<div class="stock-wrapper">
+  <mat-card>
+    <mat-card-header class="card-header">
+      <mat-card-title>Stocks</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <mat-card-actions class="float-right">
+          <button class="add-product-btn" mat-raised-button (click)="addProduct()" color="primary">Add Product</button>
+        </mat-card-actions>
+      </div>
+      <table class="product-table">
+        <tr>
+          <th width="700">
+            Product
+          </th>
+          <!-- <th width="200">
+            Quantity
+          </th> -->
+          <th width="400">
+            Price
+          </th>
+          <th width="100">
+            Actions
+          </th>
+        </tr>
+        <tr *ngFor="let product of products| slice:startIndex:endIndex; let i = index">
+          <td width="700">{{product.name}}</td>
+          <!-- <td width="200">{{product.quantity}}</td> -->
+          <td width="400">{{product.rate}}</td>
+          <td width="100">
+            <i class="material-icons icon" title="Edit" (click)="editProduct(i)">edit</i>
+            <i class="material-icons icon" title="Delete" (click)="deleteProduct(i)">delete</i>
+          </td>
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-paginator [length]="products.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="onChange($event)">
+    </mat-paginator>
+  </mat-card>
+</div>

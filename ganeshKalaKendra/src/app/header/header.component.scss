@@ -1,0 +1,38 @@
+.header-container{
+    background-color:#3f51b5;
+    height:100px;
+
+    .logo-container{
+        background: url('../../assets/images/logo.jpg') no-repeat center center;
+        width: 120px;
+        height: 100px;
+        background-size: contain;
+        float: left;
+        background-color: #fff;
+    }
+
+    .title {
+        color: #fff;
+        font-size: 50px;
+        line-height: 100px;
+        text-align: center;
+    }
+
+    .user-action {
+        position: absolute;
+        top: 75px;
+        right: 0;
+        color: #fff;
+        margin-right: 20px;
+
+        span {
+            text-transform: capitalize;
+        }
+
+        .logout-link {
+            text-decoration: none;
+            color: #fff;
+            margin-left: 10px;
+        }
+    }
+}

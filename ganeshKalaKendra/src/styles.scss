@@ -1,0 +1,126 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+$material-woff2-font-path: './assets/fonts/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2';
+
+$error-red: #f44336;
+$primary-purple: #3f51b5;
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url($material-woff2-font-path) format('woff2');
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 50%;
+}
+
+.mat-radio-button { 
+    padding: 10px 20px;
+
+    &.mat-accent {
+        &.mat-radio-checked {
+            .mat-radio-outer-circle {
+                border-color: #3f51b5;
+            }
+        }
+        .mat-radio-inner-circle {
+            background-color: #3f51b5;
+        }
+    }
+}
+
+.mat-radio-button:first-child {
+    padding-left: 0;
+}
+
+.mat-card>.mat-card-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.card-header {
+    .mat-card-header-text {
+        margin: 0 auto;
+
+        .mat-card-title {
+            font-size: 20px;
+        }
+    }
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.icon.disabled{
+    opacity:0;
+    cursor: default;
+}
+
+.mat-form-field-infix{
+    width:100%;
+}
+
+.float-right {
+    float: right;
+}
+
+body {
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    margin: 0;
+}
+
+.pull-right {
+    float: right;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+.mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element{
+    background-color: rgba(63,81,181,0.26)
+}
+
+.notification-msg::after {
+    content: '';
+    background-image: url('./assets/images/green-tick.png');
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-size: contain;
+    float: right;
+}

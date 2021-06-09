@@ -1,0 +1,37 @@
+ table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table td, table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table tr:hover {background-color: #ddd;}
+
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #3f51b5;
+    color: white;
+}
+
+.mat-card-actions {
+    margin-right: 0;
+}
+
+.add-product-btn::before {
+    content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAQAAAD8x0bcAAAAzklEQVR4AWIgGQAKJWsDBIAYAA6AVkiJywC4rYCMARXsgba4b8EuSE2HcwR3eI3ca4KWGGmpMbSfAQN9HssQwytiY8KSCuaTZhZpKRbbI2JkKtX9tMx9shlvBjrsCF3kAoWLFBRr+4po2FO/LRgxusk18WjOYgLwfYR8QPIsZgH16SABmEuVGTkUNZA9QzlA+RFSArkzlPp6nBdI/bt4/XZxUVqiBF6/AL9YW8+fOcP59JnO02fqH03Wj2GxvkZPz+AlwPrvqZKR+jlVfpcDUlzi348jRZYAAAAASUVORK5CYII=');
+    position: relative;
+    top: 5px;
+    left: -5px;
+}
+.product-table{
+    .icon{
+        margin: 0 10px;
+    }
+}
